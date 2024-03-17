@@ -1,0 +1,698 @@
+
+--Tabloların oluşturulması
+
+CREATE TABLE Apartman (
+    ApartmanID NUMBER PRIMARY KEY,
+    ApartmanAdi VARCHAR2(100),
+    KatSayisi NUMBER,
+    DaireSayisi NUMBER
+);
+
+CREATE TABLE DaireSahipleri (
+    DaireSahibiID NUMBER PRIMARY KEY,
+    Adi VARCHAR2(50),
+    Soyadi VARCHAR2(50),
+    Telefon VARCHAR2(15)
+);
+
+CREATE TABLE Daireler (
+    DaireID NUMBER PRIMARY KEY,
+    ApartmanID NUMBER,
+    DaireSahibiID NUMBER,
+    Metrekare NUMBER,
+    FOREIGN KEY (ApartmanID) REFERENCES Apartman(ApartmanID),
+    FOREIGN KEY (DaireSahibiID) REFERENCES DaireSahipleri(DaireSahibiID)
+);
+
+CREATE TABLE PersonelGorevleri (
+    GorevID NUMBER PRIMARY KEY,
+    GorevAdi VARCHAR2(100),
+    BaslangicTarihi DATE,
+    BitisTarihi DATE
+);
+
+CREATE TABLE Personel (
+    PersonelID NUMBER PRIMARY KEY,
+    Adi VARCHAR2(50),
+    Soyadi VARCHAR2(50),
+    Maas NUMBER,
+    GorevID NUMBER,
+    FOREIGN KEY (GorevID) REFERENCES PersonelGorevleri(GorevID)
+);
+
+------------------------------------------------------------------------------------------
+
+  CREATE TABLE Aidat (
+    AidatID NUMBER PRIMARY KEY,
+    ApartmanID NUMBER,
+    DaireID NUMBER,
+    AidatTutari NUMBER,
+    OdemeTarihi DATE,
+    CONSTRAINT fk_aidat_apartman FOREIGN KEY (ApartmanID) REFERENCES Apartman(ApartmanID),
+    CONSTRAINT fk_aidat_daire FOREIGN KEY (DaireID) REFERENCES Daireler(DaireID)
+  );
+
+
+ 
+  CREATE TABLE BinaBakimHizmetler (
+    BakimID NUMBER PRIMARY KEY,
+    ApartmanID NUMBER,
+    BakimTipi VARCHAR2(50),
+    BakimTarihi DATE,
+    Tutar NUMBER,
+    CONSTRAINT fk_bakim_apartman FOREIGN KEY (ApartmanID) REFERENCES Apartman(ApartmanID)
+  );
+
+
+  CREATE TABLE Giderler (
+    GiderID NUMBER PRIMARY KEY,
+    ApartmanID NUMBER,
+    GiderTipi VARCHAR2(50),
+    Tutar NUMBER,
+    OdemeTarihi DATE,
+    CONSTRAINT fk_gider_apartman FOREIGN KEY (ApartmanID) REFERENCES Apartman(ApartmanID)
+  );
+
+ 
+  CREATE TABLE Ariza (
+    ArizaID NUMBER PRIMARY KEY,
+    ApartmanID NUMBER,
+    ArizaTipi VARCHAR2(50),
+    ArizaTarihi DATE,
+    OnarimTarihi DATE,
+    CONSTRAINT fk_ariza_apartman FOREIGN KEY (ApartmanID) REFERENCES Apartman(ApartmanID)
+  );
+
+
+  CREATE TABLE ToplantiTakvimi (
+    ToplantiID NUMBER PRIMARY KEY,
+    ApartmanID NUMBER,
+    ToplantiTarihi DATE,
+    ToplantiKonusu VARCHAR2(100),
+    ToplantiYeri VARCHAR2(100),
+    CONSTRAINT fk_toplanti_apartman FOREIGN KEY (ApartmanID) REFERENCES Apartman(ApartmanID)
+  );
+
+-------------------------------------İNSERT İŞLEMLERİ------------------------------------------------------------------------------------
+
+-- Apartman tablosuna 5 INSERT
+INSERT INTO Apartman (ApartmanID, ApartmanAdi, KatSayisi, DaireSayisi) VALUES (1, 'kirmizi apartmani', 10, 50);
+INSERT INTO Apartman (ApartmanID, ApartmanAdi, KatSayisi, DaireSayisi) VALUES (2, 'sari apartmani', 8, 40);
+INSERT INTO Apartman (ApartmanID, ApartmanAdi, KatSayisi, DaireSayisi) VALUES (3, 'mavi apartmani', 14, 70);
+INSERT INTO Apartman (ApartmanID, ApartmanAdi, KatSayisi, DaireSayisi) VALUES (4, 'turuncu apartmani', 12, 60);
+INSERT INTO Apartman (ApartmanID, ApartmanAdi, KatSayisi, DaireSayisi) VALUES (5, 'mor apartmani', 11, 55);
+
+-- DaireSahipleri tablosuna 5 INSERT
+INSERT INTO DaireSahipleri (DaireSahibiID, Adi, Soyadi, Telefon) VALUES (106, 'Mehmet', 'Aydın', '5559876');
+INSERT INTO DaireSahipleri (DaireSahibiID, Adi, Soyadi, Telefon) VALUES (107, 'Zeynep', 'Kara', '5554321');
+INSERT INTO DaireSahipleri (DaireSahibiID, Adi, Soyadi, Telefon) VALUES (108, 'Okan', 'Demir', '5551111');
+INSERT INTO DaireSahipleri (DaireSahibiID, Adi, Soyadi, Telefon) VALUES (109, 'Elif', 'Yılmaz', '5552222');
+INSERT INTO DaireSahipleri (DaireSahibiID, Adi, Soyadi, Telefon) VALUES (110, 'Cemal', 'Güneş', '5553333');
+
+-- Daireler tablosuna 5 INSERT
+INSERT INTO Daireler (DaireID, ApartmanID, DaireSahibiID, Metrekare) VALUES (101, 1, 106, 95);
+INSERT INTO Daireler (DaireID, ApartmanID, DaireSahibiID, Metrekare) VALUES (201, 2, 107, 75);
+INSERT INTO Daireler (DaireID, ApartmanID, DaireSahibiID, Metrekare) VALUES (301, 3, 108, 100);
+INSERT INTO Daireler (DaireID, ApartmanID, DaireSahibiID, Metrekare) VALUES (401, 4, 109, 85);
+INSERT INTO Daireler (DaireID, ApartmanID, DaireSahibiID, Metrekare) VALUES (501, 5, 110, 90);
+
+-- PersonelGorevleri tablosuna 5 INSERT
+INSERT INTO PersonelGorevleri (GorevID, GorevAdi, BaslangicTarihi, BitisTarihi) VALUES (3, 'Temizlik', TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2022-12-31', 'YYYY-MM-DD'));
+INSERT INTO PersonelGorevleri (GorevID, GorevAdi, BaslangicTarihi, BitisTarihi) VALUES (4, 'Muhasebe', TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2024-01-01', 'YYYY-MM-DD'));
+INSERT INTO PersonelGorevleri (GorevID, GorevAdi, BaslangicTarihi, BitisTarihi) VALUES (5, 'Teknik Destek', TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2023-01-01', 'YYYY-MM-DD'));
+INSERT INTO PersonelGorevleri (GorevID, GorevAdi, BaslangicTarihi, BitisTarihi) VALUES (6, 'İnsan Kaynakları', TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2022-12-31', 'YYYY-MM-DD'));
+INSERT INTO PersonelGorevleri (GorevID, GorevAdi, BaslangicTarihi, BitisTarihi) VALUES (7, 'Pazarlama', TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2023-01-01', 'YYYY-MM-DD'));
+
+-- Personel tablosuna 5 INSERT
+INSERT INTO Personel (PersonelID, Adi, Soyadi, Maas, GorevID) VALUES (303, 'Selin', 'Akgül', 4800, 3);
+INSERT INTO Personel (PersonelID, Adi, Soyadi, Maas, GorevID) VALUES (304, 'Kemal', 'Yıldız', 5200, 4);
+INSERT INTO Personel (PersonelID, Adi, Soyadi, Maas, GorevID) VALUES (305, 'Deniz', 'Eren', 5000, 5);
+INSERT INTO Personel (PersonelID, Adi, Soyadi, Maas, GorevID) VALUES (306, 'Berk', 'Çelik', 5500, 6);
+INSERT INTO Personel (PersonelID, Adi, Soyadi, Maas, GorevID) VALUES (307, 'Gizem', 'Taş', 4900, 7);
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+--Tablolara veri girişleri:
+
+
+INSERT INTO Aidat (AidatID, ApartmanID, DaireID, AidatTutari, OdemeTarihi ) VALUES (1, 1, 101, 500, TO_DATE('2023-12-01', 'YYYY-MM-DD'));
+INSERT INTO Aidat (AidatID, ApartmanID, DaireID, AidatTutari, OdemeTarihi ) VALUES (2, 2, 201, 600, TO_DATE('2023-12-02', 'YYYY-MM-DD'));
+INSERT INTO Aidat (AidatID, ApartmanID, DaireID, AidatTutari, OdemeTarihi ) VALUES (3, 3, 301, 750, TO_DATE('2023-12-03', 'YYYY-MM-DD'));
+INSERT INTO Aidat (AidatID, ApartmanID, DaireID, AidatTutari, OdemeTarihi ) VALUES (4, 4, 401, 400, TO_DATE('2023-12-04', 'YYYY-MM-DD'));
+INSERT INTO Aidat (AidatID, ApartmanID, DaireID, AidatTutari, OdemeTarihi ) VALUES (5, 5, 501, 550, TO_DATE('2023-12-05', 'YYYY-MM-DD'));
+
+
+INSERT INTO BinaBakimHizmetler (BakimID, ApartmanID, BakimTipi, BakimTarihi, Tutar) VALUES (1, 1, 'Asansör Bakımı', TO_DATE('2023-06-10', 'YYYY-MM-DD'), 200);
+INSERT INTO BinaBakimHizmetler (BakimID, ApartmanID, BakimTipi, BakimTarihi, Tutar) VALUES (2, 2, 'Çatı Onarımı', TO_DATE('2023-01-07', 'YYYY-MM-DD'), 300);
+INSERT INTO BinaBakimHizmetler (BakimID, ApartmanID, BakimTipi, BakimTarihi, Tutar) VALUES (3, 3, 'Isıtma Sistemi Bakımı', TO_DATE('2023-07-25', 'YYYY-MM-DD'), 400);
+INSERT INTO BinaBakimHizmetler (BakimID, ApartmanID, BakimTipi, BakimTarihi, Tutar) VALUES (4, 4, 'Bahçe Bakımı', TO_DATE('2023-01-20', 'YYYY-MM-DD'), 250);
+INSERT INTO BinaBakimHizmetler (BakimID, ApartmanID, BakimTipi, BakimTarihi, Tutar) VALUES (5, 5, 'Havuz Temizliği', TO_DATE('2023-01-18', 'YYYY-MM-DD'), 350);
+
+
+INSERT INTO Giderler (GiderID, ApartmanID, GiderTipi, Tutar, OdemeTarihi) VALUES (1, 1, 'Çatı Onarım Giderleri', 150, TO_DATE('2023-01-03', 'YYYY-MM-DD'));
+INSERT INTO Giderler (GiderID, ApartmanID, GiderTipi, Tutar, OdemeTarihi) VALUES (2, 2, 'Çöp Toplama Hizmeti', 100, TO_DATE('2023-01-08', 'YYYY-MM-DD'));
+INSERT INTO Giderler (GiderID, ApartmanID, GiderTipi, Tutar, OdemeTarihi) VALUES (3, 3, 'Asansör Bakım Giderleri', 200, TO_DATE('2023-01-13', 'YYYY-MM-DD'));
+INSERT INTO Giderler (GiderID, ApartmanID, GiderTipi, Tutar, OdemeTarihi) VALUES (4, 4, 'Temizlik Malzemeleri', 50, TO_DATE('2023-01-18', 'YYYY-MM-DD'));
+INSERT INTO Giderler (GiderID, ApartmanID, GiderTipi, Tutar, OdemeTarihi) VALUES (5, 5, 'Bahçe Bakımı Giderleri', 300, TO_DATE('2023-01-23', 'YYYY-MM-DD'));
+
+
+INSERT INTO Ariza (ArizaID, ApartmanID, ArizaTipi, ArizaTarihi, OnarimTarihi) VALUES (1, 1, 'Su Tesisatı Sorunu', TO_DATE('2023-08-06', 'YYYY-MM-DD'), null);
+INSERT INTO Ariza (ArizaID, ApartmanID, ArizaTipi, ArizaTarihi, OnarimTarihi) VALUES (2, 2, 'Isıtma Sistemi Arızası', TO_DATE('2023-04-09', 'YYYY-MM-DD'), null);
+INSERT INTO Ariza (ArizaID, ApartmanID, ArizaTipi, ArizaTarihi, OnarimTarihi) VALUES (3, 3, 'Asansör Arızası', TO_DATE('2023-01-14', 'YYYY-MM-DD'), null);
+INSERT INTO Ariza (ArizaID, ApartmanID, ArizaTipi, ArizaTarihi, OnarimTarihi) VALUES (4, 4, 'Genel Elektrik Arızası', TO_DATE('2023-09-19', 'YYYY-MM-DD'),null);
+INSERT INTO Ariza (ArizaID, ApartmanID, ArizaTipi, ArizaTarihi, OnarimTarihi) VALUES (5, 5, 'Yangın Alarmı Sorunu', TO_DATE('2023-11-24', 'YYYY-MM-DD'),null);
+
+
+INSERT INTO ToplantiTakvimi (ToplantiID, ApartmanID, ToplantiTarihi, ToplantiKonusu, ToplantiYeri) VALUES (1, 1, TO_DATE('2023-01-15', 'YYYY-MM-DD'), 'Aidat Düzenlemesi', 'Apartman Toplantı Salonu');
+INSERT INTO ToplantiTakvimi (ToplantiID, ApartmanID, ToplantiTarihi, ToplantiKonusu, ToplantiYeri) VALUES (2, 2, TO_DATE('2023-01-20', 'YYYY-MM-DD'), 'Yönetim Toplantısı', 'Site Yönetim Ofisi');
+INSERT INTO ToplantiTakvimi (ToplantiID, ApartmanID, ToplantiTarihi, ToplantiKonusu, ToplantiYeri) VALUES (3, 3, TO_DATE('2023-03-25', 'YYYY-MM-DD'), 'Güvenlik Tedbirleri', 'Site Güvenlik Ofisi');
+INSERT INTO ToplantiTakvimi (ToplantiID, ApartmanID, ToplantiTarihi, ToplantiKonusu, ToplantiYeri) VALUES (4, 4, TO_DATE('2023-07-30', 'YYYY-MM-DD'), 'Yüzme Havuzu Kullanımı', 'Site Bahçe Alanı');
+INSERT INTO ToplantiTakvimi (ToplantiID, ApartmanID, ToplantiTarihi, ToplantiKonusu, ToplantiYeri) VALUES (5, 5, TO_DATE('2023-10-05', 'YYYY-MM-DD'), 'Sosyal Etkinlik Planlama', 'Site Toplantı Salonu');
+
+--------------------------------------------JOIN İŞLEMLERİ----------------------------------------------------------------------------------------------------------------------------------
+
+SELECT
+    A.ApartmanID,
+    A.ApartmanAdi,
+    A.KatSayisi,
+    A.DaireSayisi,
+    D.DaireID,
+    D.DaireSahibiID,
+    D.Metrekare,
+    T.ToplantiID,
+    T.ToplantiTarihi,
+    T.ToplantiKonusu,
+    T.ToplantiYeri
+FROM
+    Apartman A
+LEFT JOIN
+    Daireler D ON A.ApartmanID = D.ApartmanID
+LEFT JOIN
+    ToplantiTakvimi T ON A.ApartmanID = T.ApartmanID;
+
+--bu sorgu apartman,ve ona bağlı daire , toplantı takvimi özelliklerini bize döndürüyor .
+
+
+SELECT
+    A.ApartmanID,
+    A.ApartmanAdi,
+    A.KatSayisi,
+    A.DaireSayisi,
+    D.DaireID,
+    D.DaireSahibiID,
+    D.Metrekare,
+    DS.Adi AS SahipAdi,
+    DS.Soyadi AS SahipSoyadi
+FROM
+    Apartman A
+INNER JOIN
+    Daireler D ON A.ApartmanID = D.ApartmanID
+INNER JOIN
+    DaireSahipleri DS ON D.DaireSahibiID = DS.DaireSahibiID;
+
+--bu sorgu Apartman, Daireler ve DaireSahipleri tablolarını birleştirir ve her bir tablodan
+--alınan belirli alanları gösterir.
+
+------------------------------------------------------------------------------------------------------------------------------
+
+--Join işlemleri:
+
+
+--Belirli tarih aralığındaki aidat bilgilerini çekiyor.
+
+SELECT
+  A.AidatID,
+  A.AidatTutari ,
+  A.OdemeTarihi ,
+  D.DaireID,
+  AP.ApartmanAdi
+FROM Aidat A
+INNER JOIN Daireler D ON A.DaireID = D.DaireID
+INNER JOIN Apartman AP ON A.ApartmanID = AP.ApartmanID
+WHERE A.OdemeTarihi BETWEEN TO_DATE('2023-01-01', 'YYYY-MM-DD') AND TO_DATE('2023-12-31', 'YYYY-MM-DD');
+
+
+
+--Belirli bir tarih aralığındaki bakım hizmetleri, giderler ve arızalar ile ilgili verileri çekiyor. 
+
+SELECT
+  B.BakimID,
+  B.BakımTipi,
+  B.BakimTarihi,
+  G.GiderID,
+  G.GiderTipi,
+  G.Tutar,
+  G.OdemeTarihi,
+  A.ArizaID,
+  A.ArizaTipi,
+  A.ArizaTarihi,
+  A.OnarımTarihi
+FROM BinaBakimHizmetler B
+INNER JOIN Giderler G ON B.ApartmanID = G.ApartmanID
+INNER JOIN Ariza A ON B.ApartmanID = A.ApartmanID AND B.ApartmanID = A.ApartmanID
+WHERE G.OdemeTarihi BETWEEN TO_DATE('2023-01-01', 'YYYY-MM-DD') AND TO_DATE('2023-01-31', 'YYYY-MM-DD')
+  AND A.ArizaTarihi BETWEEN TO_DATE('2023-01-01', 'YYYY-MM-DD') AND TO_DATE('2023-01-31', 'YYYY-MM-DD');
+
+---------------------FONKSİYONLAR------------------------------------------------------------------------------------------------
+
+
+CREATE OR REPLACE FUNCTION GetDaireSahibiTelefonByDaireID(pDaireID NUMBER)
+RETURN VARCHAR2
+AS
+  vTelefon VARCHAR2(15);
+BEGIN
+  BEGIN
+    SELECT ds.Telefon INTO vTelefon
+    FROM Daireler d
+    JOIN DaireSahipleri ds ON d.DaireSahibiID = ds.DaireSahibiID
+    WHERE d.DaireID = pDaireID;
+
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      vTelefon := NULL; -- veya başka bir değer veya hata yönetimi stratejisi
+
+    WHEN OTHERS THEN
+      vTelefon := NULL; -- veya başka bir değer veya hata yönetimi stratejisi
+  END;
+
+  RETURN vTelefon;
+END;
+/
+
+
+SELECT GetDaireSahibiTelefonByDaireID(201) AS DaireSahibiTelefon FROM dual;
+
+--seçilen daire sahibinin telefon numarasını bulan
+
+
+
+
+--apartman idsini alıp daireler ,sahibi tahibi tarzı bilgileri getiriyor
+CREATE OR REPLACE TYPE DaireRowType AS OBJECT (
+  DaireID NUMBER,
+  DaireSahibi VARCHAR2(100),
+  Metrekare NUMBER
+);
+
+CREATE OR REPLACE TYPE DaireTableType AS TABLE OF DaireRowType;
+
+CREATE OR REPLACE FUNCTION GetDairelerByApartmanID(pApartmanID NUMBER)
+RETURN DaireTableType PIPELINED
+IS
+  vResult DaireRowType;
+BEGIN
+  FOR r IN (
+    SELECT d.DaireID, ds.Adi || ' ' || ds.Soyadi AS DaireSahibi, d.Metrekare
+    FROM Daireler d
+    JOIN DaireSahipleri ds ON d.DaireSahibiID = ds.DaireSahibiID
+    WHERE d.ApartmanID = pApartmanID
+  ) 
+  LOOP
+    vResult := DaireRowType(r.DaireID, r.DaireSahibi, r.Metrekare);
+    PIPE ROW(vResult);
+  END LOOP;
+RETURN ;
+END;
+/
+
+SELECT * FROM TABLE(GetDairelerByApartmanID(1));
+
+
+--------------------------------------------------------------------------------------------------------
+
+--Fonksiyonlar:
+
+
+--Daire numarasına göre aidat bilgilerini getirir:
+
+CREATE OR REPLACE FUNCTION AidatBilgi(p_daire_id NUMBER)
+RETURN VARCHAR2 IS
+  v_sonuc VARCHAR2(4000);
+  v_odeme_tarihi DATE;
+  v_kalan_gun NUMBER;
+BEGIN
+  v_sonuc := 'AidatID | ApartmanID | DaireID | AidatTutari | OdemeTarihi | KalanGun' || CHR(10);
+  v_sonuc := v_sonuc || '-------------------------------------------------------------' || CHR(10);
+
+  FOR aidat_rec IN (SELECT AidatID, ApartmanID, DaireID, AidatTutari, OdemeTarihi
+                    FROM Aidat
+                    WHERE DaireID = p_daire_id) 
+  LOOP
+    v_odeme_tarihi := aidat_rec.OdemeTarihi;
+    v_kalan_gun := TRUNC(v_odeme_tarihi) - TRUNC(SYSDATE);
+
+    v_sonuc := v_sonuc || aidat_rec.AidatID || ' | ' || aidat_rec.ApartmanID || ' | ' || aidat_rec.DaireID || ' | ' ||
+                aidat_rec.AidatTutari || ' | ' || TO_CHAR(v_odeme_tarihi, 'YYYY-MM-DD') || ' | ' || v_kalan_gun || CHR(10);
+  END LOOP;
+
+  DBMS_OUTPUT.PUT_LINE(v_sonuc);
+  RETURN v_sonuc;
+END AidatBilgi;
+/
+
+
+--Fonksiyonun çağrılması:
+
+BEGIN
+  dbms_output.put_line(AidatBilgi(101));
+END;
+/
+
+
+
+
+--BU fonksiyon sonuçları tablo gibi görüntüler.
+
+
+CREATE OR REPLACE TYPE ArizaType AS OBJECT (
+    ArizaID NUMBER,
+    ArizaTipi VARCHAR2(50),
+    ArizaTarihi DATE,
+    OnarimTarihi DATE
+);
+
+CREATE OR REPLACE TYPE ArizaTableType AS TABLE OF ArizaType;
+
+CREATE OR REPLACE FUNCTION ApartmanaAitArizalariGetir(p_apartman_id NUMBER)
+RETURN ArizaTableType PIPELINED IS
+    v_ariza ArizaType;
+BEGIN
+    FOR ariza_rec IN (SELECT ArizaID, ArizaTipi, ArizaTarihi, OnarimTarihi
+                      FROM Ariza
+                      WHERE ApartmanID = p_apartman_id) 
+    LOOP
+        v_ariza := ArizaType(ariza_rec.ArizaID, ariza_rec.ArizaTipi, ariza_rec.ArizaTarihi, ariza_rec.OnarimTarihi);
+        PIPE ROW(v_ariza);
+    END LOOP;
+
+    RETURN;
+END ApartmanaAitArizalariGetir;
+/
+
+
+--Fonksiyonun çağrılması:
+
+SELECT * FROM TABLE(ApartmanaAitArizalariGetir(2)) ariza_tablo;
+
+
+-----------------------PROSEDÜRLER--------------------------------------------------------------------------------
+
+
+CREATE OR REPLACE PROCEDURE GuncelleDaireSahibi (
+  pSahipID NUMBER,
+  pYeniAdi VARCHAR2,
+  pYeniSoyadi VARCHAR2,
+  pYeniTelefon VARCHAR2
+)
+AS
+BEGIN
+  
+  IF pSahipID <= 0 THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Geçersiz SahipID');
+  END IF;
+
+  
+  UPDATE DaireSahipleri
+  SET Adi = pYeniAdi, Soyadi = pYeniSoyadi, Telefon = pYeniTelefon
+  WHERE DaireSahibiID = pSahipID; 
+
+  COMMIT;
+EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK; 
+    DBMS_OUTPUT.PUT_LINE('Beklenmeyen bir hata oluştu. Detaylar: ' || SQLERRM);
+
+    RAISE;    
+END;
+
+
+----TETİKLEME
+BEGIN
+  GuncelleDaireSahibi(
+    pSahipID => 106,           
+    pYeniAdi => 'Yeni Ad',    
+    pYeniSoyadi => 'Yeni Soyad',
+    pYeniTelefon => 'Yeni Telefon' 
+  );
+END;
+/ 
+
+
+
+
+
+--arızaıd alıp arıza bilgilerini getiriyor
+CREATE OR REPLACE PROCEDURE ListeleArizaDetay (
+  pArizaID NUMBER
+)
+AS
+  
+  CURSOR curArizaDetay IS
+    SELECT a.ArizaID, a.ArizaTipi, a.ArizaTarihi, a.OnarimTarihi
+    FROM Ariza a
+    WHERE a.ArizaID = pArizaID;
+
+  
+  vArizaID NUMBER;
+  vArizaTipi VARCHAR2(50);
+  vArizaTarihi DATE;
+  vOnarimTarihi DATE;
+
+BEGIN
+  
+  OPEN curArizaDetay;
+
+  
+  LOOP
+    FETCH curArizaDetay INTO vArizaID, vArizaTipi, vArizaTarihi, vOnarimTarihi;
+    EXIT WHEN curArizaDetay%NOTFOUND;
+
+    DBMS_OUTPUT.PUT_LINE('Arıza ID: ' || vArizaID || ', Arıza Tipi: ' || vArizaTipi || ', Arıza Tarihi: ' || vArizaTarihi ||
+                       ', Onarım Tarihi: ' || vOnarimTarihi);
+  END LOOP;
+
+ 
+  CLOSE curArizaDetay;
+
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Belirtilen Arıza ID''sine ait veri bulunamadı.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Hata: ' || SQLERRM);
+END;
+/
+
+    
+BEGIN
+  ListeleArizaDetay(1);
+END;
+/
+
+
+---------------------------------------------------------------------------------------
+
+--Prosedürler:
+
+
+--Bu prosedür aidat ödemelerini yapar.
+
+CREATE OR REPLACE PROCEDURE AidatOde(
+  p_daireid NUMBER,
+  p_odememiktari NUMBER
+) AS
+BEGIN
+  BEGIN
+    UPDATE Aidat
+    SET OdemeTarihi = SYSDATE
+    WHERE DaireID = p_daireid AND OdemeTarihi IS NULL;
+    
+    IF SQL%ROWCOUNT = 0 THEN  
+      RAISE_APPLICATION_ERROR(-20001, 'Daire bulunamadı veya ödeme zaten yapıldı.');
+    END IF;
+
+    dbms_output.put_line('Ödeme yapıldı');
+  EXCEPTION
+    WHEN OTHERS THEN
+      dbms_output.put_line('Hata: ' || SQLERRM);
+  END;
+END AidatOde;
+
+
+--Prosedürün çağrılması:
+
+exec AidatOde(301,500);
+
+
+
+--bu prosedür cursor kullanarak binaya ait gider ,aidat ve bakımları listeler.
+
+CREATE OR REPLACE PROCEDURE BinaMaliDurumuRaporu(p_ApartmanID NUMBER)
+IS
+    CURSOR c_MaliDurum IS
+    SELECT 
+        a.AidatID,
+        a.DaireID,
+        a.AidatTutari,
+        a.OdemeTarihi,
+        g.GiderID,
+        g.GiderTipi,
+        g.Tutar AS GiderTutari,
+        g.OdemeTarihi AS GiderOdemeTarihi,
+        bh.BakimID,
+        bh.BakimTipi,
+        bh.Tutar AS BakimTutari
+    FROM 
+        Aidat a
+    LEFT JOIN 
+        Giderler g ON a.ApartmanID = g.ApartmanID
+    LEFT JOIN 
+        BinaBakimHizmetler bh ON a.ApartmanID = bh.ApartmanID
+    WHERE 
+        a.ApartmanID = p_ApartmanID;
+
+BEGIN
+    FOR v_MaliDurum IN c_MaliDurum LOOP
+        
+        DBMS_OUTPUT.PUT_LINE('Aidat ID: ' || v_MaliDurum.AidatID || ', Daire No: ' || v_MaliDurum.DaireID || ', Aidat Tutari: ' || v_MaliDurum.AidatTutari);
+        DBMS_OUTPUT.PUT_LINE('Gider ID: ' || v_MaliDurum.GiderID || ', Gider Tipi: ' || v_MaliDurum.GiderTipi || ', Gider Tutari: ' || v_MaliDurum.GiderTutari);
+        DBMS_OUTPUT.PUT_LINE('Bakim ID: ' || v_MaliDurum.BakimID || ', Bakim Tipi: ' || v_MaliDurum.BakimTipi || ', Bakim Tutari: ' || v_MaliDurum.BakimTutari);
+    END LOOP;
+END BinaMaliDurumuRaporu;
+/
+
+--prosedürün çağrılması:
+
+exec BinaMaliDurumuRaporu(2);
+
+
+-------------------------TRİGGER------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE TRIGGER check_salary_limit
+BEFORE UPDATE ON Personel
+FOR EACH ROW
+BEGIN
+  IF :NEW.Maas > 10000 THEN
+    RAISE_APPLICATION_ERROR(-20002, 'Personel maasi 10,000 TL\ yi gecemez');
+  END IF;
+END;
+/
+UPDATE Personel SET Maas = 12000 WHERE PersonelID = 303;
+/*tetiklemek için
+Personel tablosundaki bir personelin maaşı güncellendiğinde, güncellenen maaşın belirli bir limiti 
+aşmamasını kontrol eden bir tetikleyicİ*/
+
+
+
+CREATE OR REPLACE TRIGGER prevent_delete_admin_personnel
+BEFORE DELETE ON Personel
+FOR EACH ROW
+BEGIN
+  IF :OLD.GorevID = 1 THEN
+    RAISE_APPLICATION_ERROR(-20005, 'Yönetici personel silinemez.');
+  END IF;
+END;
+/
+DELETE FROM Personel WHERE PersonelID = 303;
+
+
+--Bu tetikleyici, bir personel silindiğinde çalışır ve silinen personelin GorevID değeri 1 ise (yönetici), 
+--bir hata mesajı ile birlikte bir uyarı verir. Bu durumda, silme işlemi gerçekleşmez ve hata mesajı kullanıcıya gönderilir.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+--Trigger:
+
+
+--Bu trigger arıza tablosundaki onarım tarihi alanı güncellenirse tetiklenir.Arızanın çözüldü bilgisi ve tarihini ekrana yazdırır.
+
+CREATE OR REPLACE TRIGGER ArizaOnarimTrigger
+AFTER UPDATE OF OnarimTarihi ON Ariza
+FOR EACH ROW
+DECLARE
+    v_mesaj VARCHAR2(100);
+BEGIN
+    IF :NEW.OnarimTarihi IS NOT NULL AND :OLD.OnarimTarihi IS NULL THEN
+        v_mesaj := 'ArizaID: ' || :NEW.ArizaID || ' çözüldü. Onarım tarihi: ' || TO_CHAR(:NEW.OnarimTarihi, 'YYYY-MM-DD HH24:MI:SS');
+        DBMS_OUTPUT.PUT_LINE(v_mesaj);
+    END IF;
+END;
+/
+
+
+--Tetikleme:
+
+UPDATE Ariza
+SET OnarimTarihi = SYSDATE
+WHERE ArizaID = 1;
+
+
+
+
+
+--önce aidat tablosuna ödeme durumu kolonunu ekleyelim.
+ALTER TABLE Aidat
+ADD (OdemeDurumu VARCHAR2(20));
+
+
+--BU trigger aidat tablosunda güncelleme yapıldığında tetiklenir.Odeme durumunu kontrol eder eğer önceki değeri ödendi değilse aidat tutarına %5 oranında bir artış yapar.
+
+CREATE OR REPLACE TRIGGER AidatOdeTrigger
+BEFORE UPDATE ON Aidat
+FOR EACH ROW
+BEGIN
+   
+    IF :NEW.OdemeDurumu = 'ODENDI' THEN
+       
+        IF :OLD.OdemeDurumu != 'ODENDI' THEN
+      
+            :NEW.AidatTutari := :NEW.AidatTutari + (:NEW.AidatTutari * 0.05);
+        END IF;
+    END IF;
+END;
+/
+
+--tetikleme
+
+UPDATE Aidat
+SET OdemeDurumu = 'ODENDI'
+WHERE AidatID = 5;
+
+select * from aidat
+
+-------------------------------JOB-----------------------------------------------------------------------------------------------------------------------------------
+
+BEGIN
+  DBMS_SCHEDULER.create_job (
+    job_name        => 'Tablo_Yedekleme_Job',
+    job_type        => 'PLSQL_BLOCK',
+    job_action      => 'BEGIN CREATE TABLE Yedek_PersonelGorevleri AS SELECT * FROM PersonelGorevleri; END;',
+    start_date      => SYSTIMESTAMP,
+    repeat_interval => 'FREQ=WEEKLY; BYDAY=MON; BYHOUR=3',
+    enabled         => TRUE
+  );
+END;
+/
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--Job:
+--Bu job, her ayın sonunda aidat ödemelerini kontrol eder ve gecikmiş ödemeler için faiz hesaplar.
+
+DECLARE
+  vJob1 NUMBER;
+BEGIN
+ 
+  DBMS_JOB.SUBMIT(
+    job       => vJob1,
+    what      => 'BEGIN AidatGecikmeFaiziHesapla(); END;',
+    next_date => TRUNC(LAST_DAY(SYSDATE)) + 1, -- bir sonraki ayın başında çalışır
+    interval  => 'TRUNC(LAST_DAY(SYSDATE)) + 1' -- Her ayın başında çalışır
+  );
+
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE('Aidat Gecikme Faizi Hesaplama Job ID: ' || vJob1);
+END;
+/
+
+
+
+
